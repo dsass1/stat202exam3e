@@ -1,0 +1,476 @@
+---
+title: "Exam 3"
+tutorial:
+  id: "isds_exam3e"
+  version: 0.1
+  
+output:
+  learnr::tutorial:
+    progressive: false
+    allow_skip: true
+    css: ["css/nu-theme.css"]
+runtime: shiny_prerendered
+description: >
+  This proficiency exam covers Chapter 9 - Chapter 12.
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+library(tutorialExtras)
+library(gradethis)
+library(skimr)
+
+gradethis_setup(pass = "submitted",
+                fail = "submitted",
+                error_checker.message = "submitted",
+                fail.hint = FALSE
+                )
+
+tutorial_options(exercise.completion = FALSE)
+
+tutorialExtras_setup(is_exam = TRUE)
+
+knitr::opts_chunk$set(echo = FALSE)
+
+survey_sample <- read_rds("data/survey_sample.rds")
+ 
+```
+
+
+```{r, context = "server"}
+lock_server("lock", 
+            show_correct = FALSE,
+            graded = c("sample"),
+            graded_pts = c(2),
+            ex = c("App1a", "App1b", 
+                   "App2", "App3"), 
+            ex_pts = c(2, 1, 4, 4),
+            manual = c("App2-desc", "App3-desc"), 
+            manual_pts = c(2, 2)
+            #exclude = "Name"
+            )
+```
+
+```{r Name}
+# student name
+question_text("Name:",
+              answer_fn(function(value){
+                              if(length(value) >= 1 ) {
+                                return(mark_as(TRUE))
+                                }
+                              return(mark_as(FALSE) )
+                              }),
+              correct = "submitted",
+              incorrect = "submitted",
+              allow_retry = FALSE )
+```
+
+## Instructions
+
+```{r Code}
+# question_text("Enter the exam code provided to verify you are in class. This must be submitted at the beginning of your exam. Failure to do so will result in an exam grade of 0.",
+#               answer_fn(function(value){
+#                               if(str_remove_all(str_to_lower(value), " ") %in% c("202bias","time123") ) {
+#                                 return(mark_as(TRUE))
+#                                 }
+#                               return(mark_as(FALSE) )
+#                               }),
+#               correct = "submitted",
+#               incorrect = "submitted",
+#               allow_retry = FALSE )
+```
+
+You have 60 minutes to complete this exam. The exam covers the material learned from Chapter 9 - Chapter 12. It is open note/open book - no using AI or each other.
+
+Once you are finished:
+
+-   **Check Submissions** to make sure every question/exercise has been submitted.
+-   Click the **Lock Exam** button. You will not be able to make any changes once this is clicked. 
+-   Once the exam is locked you will be able to click on the **Download Exam** button.
+
+
+## Concept (20 points)
+
+
+```{r Q}
+exam(
+  shuffle = TRUE,
+  caption = NULL,
+  #Q1
+  question_blank(
+  "The age US adults expect to marry follows a normal distribution with mean 28 and standard deviation of 2. <br> <br> Based on the empirical rule, 95% of adults expect to marry between ___ and ___" ,
+    answer("24", correct = TRUE),
+    answer("32", correct = TRUE),
+    allow_retry = TRUE,
+    correct = "submitted",
+    incorrect = "submitted"
+  ),
+  question_dropdown(
+  "You are constructing a 90% confidence interval for a proportion. Which of the following would give you one of the critical values?",
+    answer("qnorm(p = 0.90)"),
+    answer("qnorm(p = 0.95)", correct = TRUE),
+    answer("qnorm(p = 0.10)"),
+    answer("qt(p = 0.05, df = 100)"),
+    answer("1-qnorm(p = 0.05)"),
+    allow_retry = TRUE,
+    random_answer_order = TRUE,
+    correct = "submitted",
+    incorrect = "submitted"
+  ),
+  question_wordbank(
+  paste0("(2 pts) Consider sampling from a right skewed population, match each of the following statements to either plot A, B, C or D pictured below.<br>", 
+         htmltools::img(src="images/sampling_dist_A.png", height = 350, width = 500)),
+  choices = c("Statement 1: a single random sample of n = 100 observations from this *population*", 
+              "Statement 2: a sampling distribution of 100 sample means from random samples with sample size n = 40.",
+              "Statement 3: a sampling distribution of 100 sample means from random samples with sample size n = 5",
+              "Statement 4: the plot does not match any of the above scenarios"),
+  wordbank = c("Plot A", "Plot B", "Plot C", "Plot D"),
+  answer(c("Plot B","Plot A", "Plot D", "Plot C"), 
+         correct = TRUE),
+  allow_retry = TRUE,
+  arrange = "ordered",
+  correct = "submitted",
+  incorrect = "submitted",
+  options= list(label = "sample")),
+  # Q4
+  question_dropdown(
+  "A random sample of college students were asked how many exclusive relationships they have been in since attending college. The 97% confidence interval was found to be (2.7, 3.7).<br><br> Which of the following is the correct interpretation of this confidence interval? <br><br>
+  **We are 97% confident that...**",
+    answer("a randomly chosen college student has been in 2.7 to 3.7 exclusive relationships."),
+    answer("97% of college students have been in 2.7 to 3.7 exclusive relationships"),
+    answer("the average number of exclusive relationships that college students have been in is between 2.7 and 3.7", correct = TRUE),
+    answer("for students in our sample the average number of exclusive relationships they have been is between 2.7 and 3.7."),
+    allow_retry = TRUE,
+    random_answer_order = TRUE,
+    correct = "submitted",
+    incorrect = "submitted"
+  ),
+  # Q5
+  question_dropdown(
+  "Suppose we want to estimate $\\pi$, the proportion of students at Northwestern who support legalizing marijuana, so we collect a random sample of 100 students and find that 73 of them say they support legalization. We use this data to compute the following 98% confidence interval for $\\pi$: [0.612, 0.824]. <br> <br>  Which one of the following statements is true?",
+    answer("Exactly 73% of Northwestern students support legalizing marijuana."),
+    answer("There is a 98% chance that the population parameter is between 0.612 and 0.824."),
+    answer("There is a 2% chance our interval does not contain the population parameter.", correct = TRUE),
+    answer("The margin of error of our interval is 2%."),
+    answer("None of the choices provided are true."),
+    allow_retry = TRUE,
+    random_answer_order = TRUE,
+    correct = "submitted",
+    incorrect = "submitted"
+  ),
+  # Q6
+  question_dropdown(
+  "When working with the sampling distribution of a sample statistic, which of the choices would *decrease* the margin of error?",
+    answer("there is no way to change the margin of error"),
+    answer("increase the standard error"),
+    answer("increase the confidence level (ex: 90% to 95%)"),
+    answer("increase the sample size", correct = TRUE),
+    allow_retry = TRUE,
+    random_answer_order = TRUE,
+    correct = "submitted",
+    incorrect = "submitted"
+  ),
+  # Q7
+  question_dropdown(
+  "Assume a two-tailed hypothesis test for the mean and no other alterations.  <br> <br> Which one of the statements below is FALSE when we increase the sample size from 100 to 800?",
+    answer("test statistic becomes larger (more extreme/further from 0)"),
+    answer("p-value for a hypothesis test becomes larger", correct = TRUE),
+    answer("95% confidence interval becomes narrower"),
+    answer("standard error becomes smaller"),
+    allow_retry = TRUE,
+    random_answer_order = TRUE,
+    correct = "submitted",
+    incorrect = "submitted"
+  ),
+  # Q8
+  question_dropdown(
+  "We are trying to determine if the mean GPA for seniors and the mean GPA for first-year students is the same. We construct the following hypothesis test at the 0.10 significance level:
+  <br> 
+  $$H_0: \\mu_{seniors} - \\mu_{first-years} = 0$$
+  $$H_A: \\mu_{seniors} - \\mu_{first-years} \\ne 0$$ 
+  <br>
+  As a class we perform repeated sampling where each of the 90 students in the class takes one random sample of 30 seniors and 70 first years to test the hypothesis. <br> <br>
+  The registrar tells us the true difference in means is 0. <br> <br>
+  Which of the following is a reasonable expectation?" ,
+    answer("We expect 30 students to decide that there is no difference"),
+    answer("We expect 9 students to decide that there is a non-zero difference", correct = TRUE),
+    answer("We expect 70 students to decide that there is a non-zero difference"),
+    answer("We expect 90 students to decide that there is no difference"),
+    answer("We cannot have any valid conclusions because the sample sizes of seniors and first years was unequal."),
+    allow_retry = TRUE,
+    random_answer_order = TRUE,
+    correct = "submitted",
+    incorrect = "submitted"
+  ),
+  # Q9
+  question_dropdown(
+  "Suppose we want to perform a hypothesis test for cancer. What is the person told and what is the truth for a Type I error?" ,
+    answer("the person is told they do NOT have cancer and the truth is they do NOT have cancer"),
+    answer("the person is told they have cancer and the truth is they do NOT have cancer", correct = TRUE),
+    answer("the person is told they do NOT have cancer and the truth is they have cancer"),
+    answer("the person is told they have cancer and the truth is they have cancer"),
+    answer("not enough information provided"),
+    allow_retry = TRUE,
+    random_answer_order = TRUE,
+    correct = "submitted",
+    incorrect = "submitted"
+  ),
+  # Q10
+  question_dropdown(
+  "A consultant conducts an experiment on the effect of webpage layout on sales for an internet company by randomizing individuals to either a new webpage (treatment) or to the old webpage (control). After the intervention the consultant performs a two-sample t-test on the sales from each group and obtains a p-value of 0.047. <br> <br> Which one of the following is a reasonable interpretation of their results?",
+    answer("the decision depends on the significance level they set before conducting the experiment", correct = TRUE),
+    answer("the p-value rounds to 0.05, so no decision can be made"),
+    answer("since the p-value is less than 0.05 the consultant can reject the null hypothesis."),
+    answer("since the p-value is greater than 0.01 the consultant can accept the null hypothesis"),
+    allow_retry = TRUE,
+    random_answer_order = TRUE,
+    correct = "submitted",
+    incorrect = "submitted"
+  ),
+  # Q11
+  question_wordbank(
+  "True or False?",
+    choices = c("In hypothesis testing, a Type II error is more commonly known as a false positive.",
+                 "You can always perform a two-sided test even if the claim is stated as a one-sided test to avoid missing an effect in the opposite direction of the claim.",
+                "Controlling for a Type I error is always more important than controlling for a Type II error.",
+              #  "If you increase alpha, (significance level), by 5%, your Type II error rate will decrease by exactly 5%.",
+                "In repeated sampling, the sampling distribution of a sample proportion is the chi-square distribution.",
+                "A p-value is the probability of observing an estimate as extreme as our sample estimate if the null hypothesis is true."),
+    wordbank = c("TRUE", "FALSE"),
+    answer(c("FALSE", "TRUE", "FALSE", "FALSE", "TRUE"), correct = TRUE),
+    allow_retry = TRUE,
+    box = 9,
+    correct = "submitted",
+    incorrect = "submitted"
+  ),
+  # Q12
+  question_radio(
+  "A young and ambitious teacher believes at least 90% of her students will study for the final exam. The teacher decides to test this belief using a hypothesis test at the $\\alpha = 0.02$ significance level. <br>  <br>  What is an appropriate null hypothesis?",
+    answer("$\\mu_{study} = 0.9$"),
+    answer("$\\mu_{study} > 0.9$"),
+    answer("$\\pi_{study} = 0.9$", correct = TRUE),
+    answer("$\\pi_{study} > 0.9$"),
+    answer("$\\hat{\\pi}_{study} \\le 0.9$"),
+    allow_retry = TRUE,
+    correct = "submitted",
+    incorrect = "submitted",
+    options= list(multi_part = "htest")
+  ),
+  question_dropdown(
+  paste0("In the previous question, the hypothesis test results are as follows.<br> <br>" ,   htmltools::img(src="images/htest_1.png", height = 200, width = 500)," <br> <br> What is the decision at the $\\alpha = 0.02$ significance level?"),
+    answer("Reject the null, there is insufficent evidence to say that the number of students that studied is different than 90%."),
+    answer("Fail to reject the null, there is insufficent evidence to say that the number of students that studied is different than 90%.", correct = TRUE),
+    answer("Reject the null, there is significant evidence that less than 90% of students studied."),
+    answer("Fail to reject the null, there is significant evidenct that less than 90% of students studied."),
+    allow_retry = TRUE,
+    random_answer_order = TRUE,
+    correct = "submitted",
+    incorrect = "submitted",
+    options= list(multi_part = "htest")
+  )
+  
+)
+
+```
+
+
+## Application (15 points)
+
+*Failure to use functions taught in class and opting for base R or AI solutions will result in an automatic deduction from each application in which it is used.*
+
+<br>
+
+The following applications use the `survey_sample` dataset which has been preloaded for you.
+
+This is a **random sample** taken from our population: **Northwestern Students who take STAT 202**.
+
+<br>
+
+**NA values should NOT be included in the total count (`n`) of a proportion because we do not know what category they would fall in and it would skew our proportion.**
+
+<br>
+
+If for some reason you are not able to complete the code to obtain the results it would be wise to still interpret your problem with 'placeholder' values for partial credit.
+
+<br>
+
+### Application 1 (3 points)
+
+*You do not need the dataset for this application.*
+
+Suppose the number of minutes that a student athlete exercises each week follows a normal distribution with mean 500 and sd 100. 
+
+What proportion of athletes exercise **between** 350 and 650 minutes?
+
+```{r App1a, exercise = TRUE}
+
+```
+
+
+```{r App1a-solution, exercise.reveal_solution = FALSE}
+pnorm(650, mean = 500, sd = 100) - pnorm(350, mean = 500, sd = 100)
+```
+
+```{r App1a-check}
+grade_this_code(
+  correct = "submitted",
+  incorrect = "submitted"
+)
+```
+
+The top 20% of athletes exercise more than how many minutes?
+
+```{r App1b, exercise = TRUE}
+
+```
+
+
+```{r App1b-solution, exercise.reveal_solution = FALSE}
+qnorm(p = 0.2, mean = 500, sd = 100, lower.tail = FALSE)
+```
+
+```{r App1b-check}
+grade_this_code(
+  correct = "submitted",
+  incorrect = "submitted"
+)
+```
+
+
+### Application 2 (6 points)
+
+Suppose we are interested in examining the difference in the average number of parties that students who take STAT 202 and live on `North campus` go to and the average number of parties that students who take STAT 202 and live on `South campus` go to.
+
+In other words, use the `campus_housing` and `num_party` variables in the `survey_sample` data to **construct a 98% confidence interval** for the difference in means. 
+
+```{r App2, exercise=TRUE}
+
+```
+
+
+```{r App2-solution, exercise.reveal_solution = FALSE}
+north <- survey_sample |> 
+  filter(campus_housing == "North campus")
+
+south <- survey_sample |> 
+  filter(campus_housing == "South campus")
+
+t.test(x = north$num_party, south$num_party, conf.level = 0.98)
+```
+
+```{r App2-check}
+grade_this_code(
+  correct = "submitted",
+  incorrect = "submitted"
+)
+```
+<br>
+
+Interpret the **confidence interval** in the context of the problem. Then use the confidence interval to answer and explain: is there a difference in means, if so, do students who live on North or South campus attend more parties?
+
+```{r App2-desc}
+question_text("", incorrect = "submitted",
+              answer("ManuallyGradedEverythingWrong", 
+                     correct = TRUE),
+              allow_retry = TRUE,
+              rows = 5)
+```
+
+
+### Application 3 (6 points)
+
+A national survey reports that 12% of Americans are `Very happy`. Is the proportion of students who take STAT 202 who report being `Very happy` more than the national survey?
+
+Use the `survey_sample` data and `happy` variable to conduct a hypothesis test for the proportion of students who take STAT 202 at NU who are `Very happy` at the $\alpha$ = 0.10 significance level.
+
+
+$$H_0: \pi_{veryhappy} = 0.12$$
+$$H_A: \pi_{veryhappy} \ne 0.12$$
+
+```{r App3, exercise = TRUE}
+
+```
+
+
+```{r App3-solution, exercise.reveal_solution = FALSE}
+survey_sample |> 
+  count(happy)
+
+prop.test(x = 39, n = 250, p = .12, conf.level = 0.9, correct = FALSE)
+```
+
+```{r App3-check}
+grade_this_code(
+  correct = "submitted",
+  incorrect = "submitted"
+)
+```
+
+<br>
+
+State your p-value and interpret your decision in the context of the problem.
+
+```{r App3-desc}
+question_text("", incorrect = "submitted",
+              answer("ManuallyGradedEverythingWrong", 
+                     correct = TRUE),
+              allow_retry = TRUE,
+              rows = 10)
+```
+
+
+## survey_sample Data
+
+This is a **random sample** taken from our population: **Northwestern Students who take STAT 202**.
+
+You are welcome to open the dataset in Posit Cloud as well if the information provided below is not sufficient for you.
+
+Variables:
+
+- `gender_ident` -- "Which gender do you identify as (Male, Female). "Other" was removed to protect against the possibility of having their responses identified by other students.""
+- `school_year` -- "What year are you in school? (First year, Sophomore, Junior, Senior, Other)"
+- `num_party` -- "On average (approx.) how many parties a month do you attend?"
+- `happy` -- "How happy are you? (Very happy, Pretty happy, Not too happy, Don't know)"
+- `personality` -- "Are you more of an introvert or extrovert? (Introvert, Extrovert)"
+- `campus_housing` -- "Where do you live on campus? (North campus, South campus)"
+- `brain_type` -- "Do you consider yourself more "left" or "right" -brained (left-brain, right-brain)?"
+- `marry` -- "What age do you expect to get married?"
+- `love_first_sight` -- "Do you believe in love at first sight (Yes, No)?"
+- `gpa_nu` -- "What is your current GPA at NU? If unknown type NA."
+- `followers_insta` -- "How many followers do you have on Instagram (approx.)?"
+
+
+```{r}
+glimpse(survey_sample)
+```
+
+```{r}
+skim(survey_sample)
+```
+
+## Submit
+
+Once you are finished:
+
+-   Click "Check submissions" to make sure all questions and exercises are submitted -- **Un-submitted questions will receive a 0.**
+
+```{r}
+lock_check_ui(id = "lock")
+```
+
+<br>
+<br>
+
+-   Do **NOT** lock the exam until you have verified you have submitted all problems. Consider going back and clicking Submit on each Application again to ensure you have submitted your most recent solution.
+-   Once all questions/exercises are submitted click the **Lock Exam** button. Once you click this you will not be able to make any changes to your exam! 
+
+<br>
+
+-   Once the lock is pressed a **Download Exam** option will become available.
+-   Download and **Check your HTML!**
+-   Upload the html to Canvas.
+
+```{r}
+lock_button_ui(id = "lock")
+```
